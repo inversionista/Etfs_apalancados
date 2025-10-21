@@ -37,5 +37,15 @@ PAIRS = [
     {"base": "SLV",  "alt": "ZSL",  "target_ratio": -2.0, "emisor": "ProShares", "nota": "Plata bear 2x"},
     {"base": "USO",  "alt": "UCO",  "target_ratio": 2.0,  "emisor": "ProShares", "nota": "Petróleo bull 2x"},
     {"base": "USO",  "alt": "SCO",  "target_ratio": -2.0, "emisor": "ProShares", "nota": "Petróleo bear 2x"},
-    {"base": "BITO","alt": "BITX", "target_ratio": 2.0,  "emisor": "Volatility Shares", "nota": "Bitcoin futures bull 2x"}
+    {"base": "BITO","alt": "BITX", "target_ratio": 2.0,  "emisor": "Volatility Shares", "nota": "Bitcoin futures bull 2x"},
+    # --- TSLA extra ---
+    {"base": "TSLA", "alt": "TSLQ", "target_ratio": -2.0, "emisor": "AXS/Tradr", "nota": "Tesla bear -2x"},
+
+    # --- AMD (bull 2x, 2 emisores distintos) ---
+    {"base": "AMD",  "alt": "AMDL", "target_ratio": 2.0,  "emisor": "GraniteShares", "nota": "AMD bull 2x"},
+    {"base": "AMD",  "alt": "AMDG", "target_ratio": 2.0,  "emisor": "Leverage Shares", "nota": "AMD bull 2x"},
+
+    # --- Mineras de oro (no oro spot) ---
+    {"base": "GDX",  "alt": "NUGT", "target_ratio": 2.0,  "emisor": "Direxion", "nota": "Gold Miners bull 2x"},
+    {"base": "GDX",  "alt": "DUST", "target_ratio": -2.0, "emisor": "Direxion", "nota": "Gold Miners bear -2x"},
 ]
