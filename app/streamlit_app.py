@@ -7,6 +7,14 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 
+# --- ensure repo root in sys.path ---
+import os, sys
+APP_DIR = os.path.dirname(__file__)
+ROOT_DIR = os.path.dirname(APP_DIR)
+if ROOT_DIR not in sys.path:
+    sys.path.insert(0, ROOT_DIR)
+# ------------------------------------
+
 from core.pairs import PAIRS
 from core.metrics import summarize_pair
 from core.hedge import hedge_shares
