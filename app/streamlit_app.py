@@ -117,7 +117,7 @@ with tab1:
                      hover_data={"beta_alt_on_base":":.2f","target_ratio":":.2f","corr":":.2f","r2":":.2f"},
                      template=template, title="Desviación (β efectivo - target)")
     fig_dev.update_layout(xaxis_tickangle=-45, yaxis_title="Desviación")
-    st.plotly_chart(fig_dev, use_container_width=True)
+    st.plotly_chart(fig_dev, use_container_width=True, key="deviation_chart")
 
 with tab2:
     st.subheader("Lollipop β vs Target")
@@ -128,14 +128,14 @@ with tab2:
     for i, row in l.iterrows():
         fig_l.add_shape(type="line", x0=i, x1=i, y0=row["target_ratio"], y1=row["beta_alt_on_base"], line=dict(width=2))
     fig_l.update_layout(template=template, xaxis_tickangle=-45, yaxis_title="Ratio")
-    st.plotly_chart(fig_l, use_container_width=True)
+    st.plotly_chart(fig_l, use_container_width=True, key="lollipop_chart")
 
     st.subheader("Riesgo–Retorno (ALT, burbujas ~ vol. 30d)")
     bub = df.copy(); bub["pair"] = bub["base"] + "→" + bub["alt"]
     bub = bub[["pair","ret_alt","vol_alt","avg_vol_alt"]].rename(columns={"ret_alt":"ret","vol_alt":"vol","avg_vol_alt":"volume"})
     fig_bub = px.scatter(bub, x="vol", y="ret", size="volume", hover_name="pair", size_max=40, template=template,
                          labels={"vol":"Vol anualizada","ret":"Retorno período"})
-    st.plotly_chart(fig_bub, use_container_width=True)
+    st.plotly_chart(fig_bub, use_container_width=True, key="bubble_chart")
 
     st.subheader("β rodante")
     pair_labels = [f'{p["base"]}→{p["alt"]}' for p in pairs]
@@ -151,7 +151,7 @@ with tab2:
         if rb is not None and not rb.empty:
             fig_rb = px.line(x=rb.index, y=rb.values, template=template, labels={"x":"Fecha","y":"β"})
             fig_rb.update_layout(title=f"β rodante {base}→{alt}")
-            st.plotly_chart(fig_rb, use_container_width=True)
+            st.plotly_chart(fig_rb, use_container_width=True, key="rb_chart_tab2")
         else:
             st.info("No hay suficientes datos para β rodante.")
 
@@ -167,7 +167,7 @@ with tab2:
             cum = (s / s.iloc[0]) * 100.0
             fig_cr.add_trace(go.Scatter(x=cum.index, y=cum.values, mode="lines", name=f"{label} ALT"))
         fig_cr.update_layout(template=template, yaxis_title="Índice 100 = inicio", title="Retornos acumulados — ALT")
-        st.plotly_chart(fig_cr, use_container_width=True)
+        st.plotly_chart(fig_cr, use_container_width=True, key="cum_alt_chart")
 
     st.subheader("Retornos acumulados **BASE vs ALT** (multi-par)")
     sel_pairs_dual = st.multiselect("Pares (BASE y ALT)", loaded_pairs, default=loaded_pairs[:3], key="cr_dual_sel")
@@ -183,7 +183,7 @@ with tab2:
             fig_dual.add_trace(go.Scatter(x=cb.index, y=cb.values, mode="lines", name=f"{base} (BASE) — {label}", line=dict(dash="dash")))
             fig_dual.add_trace(go.Scatter(x=ca.index, y=ca.values, mode="lines", name=f"{alt} (ALT) — {label}", line=dict(dash="solid")))
         fig_dual.update_layout(template=template, yaxis_title="Índice 100 = inicio", title="Retornos acumulados — BASE vs ALT")
-        st.plotly_chart(fig_dual, use_container_width=True)
+        st.plotly_chart(fig_dual, use_container_width=True, key="cum_dual_chart")
 
 with tab3:
     st.subheader("Calculadora de cobertura (beta & precios spot)")
@@ -252,7 +252,7 @@ with tab4:
         if rb is not None and not rb.empty:
             fig_rb = px.line(x=rb.index, y=rb.values, template=template, labels={"x":"Fecha","y":"β"})
             fig_rb.update_layout(title=f"β rodante {base}→{alt}")
-            st.plotly_chart(fig_rb, use_container_width=True)
+            st.plotly_chart(fig_rb, use_container_width=True, key="rb_chart_adv")
 
         # --- Spread (ALT − β·BASE), ambos normalizados a 100 ---
         if hr is not None and not np.isnan(hr):
@@ -271,7 +271,7 @@ with tab4:
             fig_spread.add_trace(go.Scatter(x=upper.index, y=upper.values, mode="lines", name="+2σ", line=dict(dash="dot")))
             fig_spread.add_trace(go.Scatter(x=lower.index, y=lower.values, mode="lines", name="-2σ", line=dict(dash="dot")))
             fig_spread.update_layout(template=template, title="Spread con bandas de Bollinger", yaxis_title="Índice (normalizado)")
-            st.plotly_chart(fig_spread, use_container_width=True)
+            st.plotly_chart(fig_spread, use_container_width=True, key="spread_chart_adv")
             st.caption("Si el spread es estacionario, tiende a oscilar alrededor de la media. Excursiones > ±2σ suelen revertir (no garantizado).")
 
         # PnL simulado
@@ -287,11 +287,11 @@ with tab4:
             c1,c2 = st.columns(2)
             with c1:
                 fig_pnl = px.line(x=pnl_df.index, y=pnl_df["cum_pnl"], template=template, labels={"x":"Fecha","y":"PnL acumulado"})
-                st.plotly_chart(fig_pnl, use_container_width=True)
+                st.plotly_chart(fig_pnl, use_container_width=True, key="pnl_chart_adv")
             with c2:
                 vols = pd.Series({"ALT solo": np.sqrt(252)*unhedged_ret.std(), "Cubierta": np.sqrt(252)*hedged_ret.std()})
                 fig_vol = px.bar(x=vols.index, y=vols.values, template=template, labels={"x":"","y":"Vol anualizada"})
-                st.plotly_chart(fig_vol, use_container_width=True)
+                st.plotly_chart(fig_vol, use_container_width=True, key="vol_chart_adv")
 
             st.metric("Hedge Effectiveness", f"{heff*100:.2f}%")
         else:
