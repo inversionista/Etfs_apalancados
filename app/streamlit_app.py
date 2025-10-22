@@ -131,11 +131,70 @@ with tab2:
     st.plotly_chart(fig_l, use_container_width=True, key="lollipop_chart")
 
     st.subheader("Riesgo–Retorno (ALT, burbujas ~ vol. 30d)")
-    bub = df.copy(); bub["pair"] = bub["base"] + "→" + bub["alt"]
-    bub = bub[["pair","ret_alt","vol_alt","avg_vol_alt"]].rename(columns={"ret_alt":"ret","vol_alt":"vol","avg_vol_alt":"volume"})
-    fig_bub = px.scatter(bub, x="vol", y="ret", size="volume", hover_name="pair", size_max=40, template=template,
-                         labels={"vol":"Vol anualizada","ret":"Retorno período"})
+
+    # Base de datos del gráfico
+    bub = df.copy()
+    bub["pair"] = bub["base"] + "→" + bub["alt"]
+    bub["ret"] = pd.to_numeric(bub["ret_alt"], errors="coerce")
+    bub["vol"] = pd.to_numeric(bub["vol_alt"], errors="coerce")
+    bub["volume"] = pd.to_numeric(bub["avg_vol_alt"], errors="coerce")
+    bub["deviation"] = pd.to_numeric(bub["beta_alt_on_base"] - bub["target_ratio"], errors="coerce")
+    bub["abs_dev"] = bub["deviation"].abs()
+    bub["corr_num"] = pd.to_numeric(bub["corr"], errors="coerce")
+    bub["tipo"] = np.where(pd.to_numeric(bub["target_ratio"], errors="coerce") >= 0, "Bull", "Bear")
+
+    # 👉 añadir columna 'emisor' desde PAIRS
+    emisor_map = {(p["base"], p["alt"]): p["emisor"] for p in PAIRS}
+    bub["emisor"] = [emisor_map.get((b, a), "Desconocido") for b, a in zip(bub["base"], bub["alt"])]
+    bub["emisor"] = bub["emisor"].astype("category")
+
+    # Saneado
+    bub.replace([np.inf, -np.inf], np.nan, inplace=True)
+    if bub["volume"].notna().any():
+        bub["volume"] = bub["volume"].fillna(bub["volume"].median())
+    else:
+        bub["volume"] = 1.0
+    bub["volume"] = bub["volume"].clip(lower=1)
+    bub = bub.dropna(subset=["ret", "vol"])
+
+    # Selector de color
+    color_opt = st.selectbox(
+        "Color por:",
+        ["Ninguno", "Desviación β (efectivo − target)", "|Desviación β|", "Correlación", "Tipo ALT (bull/bear)", "Emisor"],
+        index=1,
+    )
+
+    color_kw = {}
+    if color_opt == "Ninguno":
+        pass
+    elif color_opt == "Desviación β (efectivo − target)":
+        color_kw = dict(color="deviation", color_continuous_scale="RdBu", color_continuous_midpoint=0)
+    elif color_opt == "|Desviación β|":
+        color_kw = dict(color="abs_dev", color_continuous_scale="Viridis")
+    elif color_opt == "Correlación":
+        color_kw = dict(color="corr_num", color_continuous_scale="RdYlGn", range_color=[0,1])
+    elif color_opt == "Tipo ALT (bull/bear)":
+        color_kw = dict(color="tipo", color_discrete_map={"Bull":"#2ca02c", "Bear":"#d62728"})
+    elif color_opt == "Emisor":
+        color_kw = dict(color="emisor")  # paleta discreta automática
+
+    if bub.empty:
+        st.info("No hay datos válidos para el gráfico de burbujas (ret/vol).")
+    else:
+        fig_bub = px.scatter(
+            bub,
+            x="vol",
+            y="ret",
+            size="volume",
+            hover_name="pair",
+            size_max=40,
+            template=template,
+            labels={"vol":"Vol anualizada","ret":"Retorno período"},
+            **color_kw
+        )
+    fig_bub.update_layout(title="Riesgo–Retorno (ALT, burbujas ~ vol. 30d)")
     st.plotly_chart(fig_bub, use_container_width=True, key="bubble_chart")
+
 
     st.subheader("β rodante")
     pair_labels = [f'{p["base"]}→{p["alt"]}' for p in pairs]
