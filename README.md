@@ -54,7 +54,7 @@ plotly>=5.22.0
 
 ---
 
-## Arquitectura y flujo general de la app
+## Arquitectura y flujo general
 
 ```mermaid
 flowchart LR
@@ -101,7 +101,7 @@ flowchart LR
 
 ---
 
-## Flujo específico: Cobertura avanzada
+## Flujo de cobertura avanzada
 
 ```mermaid
 sequenceDiagram
@@ -137,7 +137,7 @@ sequenceDiagram
 
 ---
 
-## Cálculos clave (resumen)
+## Cálculos clave
 
 ```mermaid
 flowchart TB
@@ -170,7 +170,7 @@ flowchart TB
 ```
 ---
 
-## 🧩 Problemas comunes
+## Problemas comunes
 
 | Error | Causa | Solución |
 |-------|--------|-----------|
@@ -182,18 +182,18 @@ flowchart TB
 
 ---
 
-## 👤 Autor / Contacto
+## Autor / Contacto
 
-**Edwin Londoño — Trading Room en Vivo**  
+👤 **Edwin Londoño — Trading Room en Vivo**  
 📧 edwin@tradingroomenvivo.com  
 📺 [YouTube: Trading Room en Vivo](https://www.youtube.com/@tradingRoomenVivo)  
 🌐 [tradingroomenvivo.com](https://www.tradingroomenvivo.com)
 
 ---
 
-## 📜 Licencia
+## Licencia
 
-Uso educativo/investigación.  
+📜 Uso educativo/investigación.  
 Queda prohibida la redistribución o modificación pública sin autorización del autor.
 
 ---
