@@ -5,8 +5,30 @@
 
 # Leveraged Pairs Lab — v7 (Trading Room en Vivo Edition)
 
+![Streamlit](https://img.shields.io/badge/Streamlit-1.38+-brightgreen)
+![Plotly](https://img.shields.io/badge/Plotly-5.22+-blue)
+![yfinance](https://img.shields.io/badge/yfinance-0.2.40-blue)
+![License](https://img.shields.io/badge/license-Restricted-lightgrey)
+
 Aplicación **Streamlit** para análisis cuantitativo de **pares apalancados** (ETF/acciones 2x–3x).  
 Compara rendimientos, volatilidades, correlaciones, betas efectivas y simula cobertura simple y avanzada (beta OLS / Theil–Sen / WLS / cointegración).
+
+---
+
+## 🚀 Demo en vivo
+👉 [**Abrir aplicación en Streamlit Cloud**](https://tradingroomenvivo-etfsapalancados.streamlit.app/)
+
+---
+
+## 📘 Contenidos
+- [Instalación y ejecución](#instalación-y-ejecución)
+- [Arquitectura y flujo general](#arquitectura-y-flujo-general)
+- [Flujo de cobertura avanzada](#flujo-de-cobertura-avanzada)
+- [Cálculos clave](#cálculos-clave)
+- [Problemas comunes](#problemas-comunes)
+- [Autor / Contacto](#autor--contacto)
+- [Licencia](#licencia)
+- [Cita](#cita)
 
 ---
 
@@ -15,6 +37,19 @@ Compara rendimientos, volatilidades, correlaciones, betas efectivas y simula cob
 ```bash
 pip install -r requirements.txt
 streamlit run app/streamlit_app.py
+```
+### Requisitos mínimos
+
+```
+streamlit>=1.38
+yfinance>=0.2.40
+pandas>=2.2.2
+numpy>=1.26.4
+scipy>=1.11.4
+statsmodels>=0.14.2
+matplotlib>=3.8.0
+scikit-learn>=1.4.2
+plotly>=5.22.0
 ```
 
 ---
@@ -133,12 +168,37 @@ flowchart TB
   A1 --> A2 --> A3 --> A4 --> A5
 
 ```
+---
+
+## 🧩 Problemas comunes
+
+| Error | Causa | Solución |
+|-------|--------|-----------|
+| `StreamlitDuplicateElementId` | Múltiples gráficos con el mismo `id` | Añadir `key=` único en cada `st.plotly_chart()` |
+| `ModuleNotFoundError: core.pairs` | Faltan `__init__.py` o rutas | Asegurar `core/__init__.py` y usar `sys.path.append(os.getcwd())` |
+| `NaN en gráficos` | Datos vacíos o `inf` | Rellenar medianas o eliminar `NaN` antes de graficar |
+| `LF/CRLF` en Windows | Saltos de línea diferentes | Crear `.gitattributes` con `* text=auto eol=lf` |
+
 
 ---
 
-## Autor / Contacto
+## 👤 Autor / Contacto
 
 **Edwin Londoño — Trading Room en Vivo**  
 📧 edwin@tradingroomenvivo.com  
 📺 [YouTube: Trading Room en Vivo](https://www.youtube.com/@tradingRoomenVivo)  
 🌐 [tradingroomenvivo.com](https://www.tradingroomenvivo.com)
+
+---
+
+## 📜 Licencia
+
+Uso educativo/investigación.  
+Queda prohibida la redistribución o modificación pública sin autorización del autor.
+
+---
+
+## 📖 Cita
+
+> Edwin Londoño (2025). *Leveraged Pairs Lab — Trading Room en Vivo*.  
+> GitHub: [inversionista/Etfs_apalancados](https://github.com/inversionista/Etfs_apalancados)
