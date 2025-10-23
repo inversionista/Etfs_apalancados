@@ -48,4 +48,7 @@ PAIRS = [
     # --- Mineras de oro (no oro spot) ---
     {"base": "GDX",  "alt": "NUGT", "target_ratio": 2.0,  "emisor": "Direxion", "nota": "Gold Miners bull 2x"},
     {"base": "GDX",  "alt": "DUST", "target_ratio": -2.0, "emisor": "Direxion", "nota": "Gold Miners bear -2x"},
+
+    # --- NFLX (bull 2x, 2 emisores distintos) ---
+    {"base": "NFLX",  "alt": "NFXL", "target_ratio": 2.0,  "emisor": "Direxion", "nota": "NFLX bull 2x"},
 ]
